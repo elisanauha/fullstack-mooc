@@ -1,0 +1,16 @@
+title 0.6: Uusi muistiinpano
+
+note over selain:
+spa.js koodi lisää uuden muistiinpanon
+listaan: notes.push(note) ja piirtää 
+listan uudestaan: redrawNotes() ja 
+lähettää palvelimelle sendToServer(note)
+end note
+
+selain->palvelin: HTTP POST https://fullstack-exampleapp.herokuapp.com/new_note_spa
+palvelin-->selain: 201 Created, {"message":"note created"}
+
+note over selain:
+spa.js koodi loggaa onnistuneen 
+vastauksen konsoliin
+end note
