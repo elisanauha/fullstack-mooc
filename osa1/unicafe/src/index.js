@@ -32,14 +32,17 @@ const Positive = (props) => {
 }
 
 const Statistics = (props) => {
-  return (
-    <div>
-      <h1>Statistics</h1>
-      <Stats text="good" stat={props.good}></Stats>
+  let info = <p>No feedback given</p>
+  if (props.good + props.neutral + props.bad)
+    info = <div><Stats text="good" stat={props.good}></Stats>
       <Stats text="neutral" stat={props.neutral}></Stats>
       <Stats text="bad" stat={props.bad}></Stats>
       <Average good={props.good} neutral={props.neutral} bad={props.bad}></Average>
-      <Positive good={props.good} neutral={props.neutral} bad={props.bad}></Positive>
+      <Positive good={props.good} neutral={props.neutral} bad={props.bad}></Positive></div>
+  return (
+    <div>
+      <h1>Statistics</h1>
+      {info}
     </div>
   )
 }
