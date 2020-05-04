@@ -9,37 +9,30 @@ const Button = (props) => {
 
 const StatisticLine = (props) => {
   return (
-    <p>{props.text} {props.stat}</p>
-  )
-}
-
-const Average = (props) => {
-  let average = 0
-  if (props.good + props.neutral + props.bad)
-    average = (props.good - props.bad) / (props.good + props.neutral + props.bad)
-  return (
-    <p>average {average}</p>
-  )
-}
-
-const Positive = (props) => {
-  let positive = 0
-  if (props.good + props.neutral + props.bad)
-    positive = (props.good * 100) / (props.good + props.neutral + props.bad)
-  return (
-    <p>positive {positive} %</p>
+    <tr>
+      <td>{props.text}</td>
+      <td>{props.stat}{(props.text === "positive") && <span> %</span>}</td>
+    </tr>
   )
 }
 
 const Statistics = (props) => {
+  let average = 0
+  let positive = 0
   let info = <p>No feedback given</p>
-  if (props.good + props.neutral + props.bad)
-    info = <div>
-      <StatisticLine text="good" stat={props.good}></StatisticLine>
-      <StatisticLine text="neutral" stat={props.neutral}></StatisticLine>
-      <StatisticLine text="bad" stat={props.bad}></StatisticLine>
-      <Average good={props.good} neutral={props.neutral} bad={props.bad}></Average>
-      <Positive good={props.good} neutral={props.neutral} bad={props.bad}></Positive></div>
+  if (props.good + props.neutral + props.bad) {
+    average = (props.good - props.bad) / (props.good + props.neutral + props.bad)
+    positive = (props.good * 100) / (props.good + props.neutral + props.bad)
+    info = <table>
+      <tbody>
+        <StatisticLine text="good" stat={props.good}></StatisticLine>
+        <StatisticLine text="neutral" stat={props.neutral}></StatisticLine>
+        <StatisticLine text="bad" stat={props.bad}></StatisticLine>
+        <StatisticLine text="average" stat={average}></StatisticLine>
+        <StatisticLine text="positive" stat={positive}></StatisticLine>
+      </tbody>
+    </table>
+  }
   return (
     <div>
       <h1>Statistics</h1>
