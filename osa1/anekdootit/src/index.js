@@ -9,6 +9,7 @@ const Button = (props) => {
 
 const App = (props) => {
   const [selected, setSelected] = useState(0)
+  const [points, setPoints] = useState(new Array(props.anecdotes.length).fill(0))
 
 
   const handleNext = () => {
@@ -16,9 +17,17 @@ const App = (props) => {
     setSelected(newSelected)
   }
 
+  const handleVote = () => {
+    const copy = [...points]
+    copy[selected] += 1
+    setPoints(copy)
+  }
+
   return (
     <div>
       <p>{props.anecdotes[selected]}</p>
+      <p>has {points[selected]} votes</p>
+      <Button name="vote" handleClick={handleVote}></Button>
       <Button name="next anecdote" handleClick={handleNext}></Button>
     </div>
   )
