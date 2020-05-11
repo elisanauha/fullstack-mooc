@@ -14,14 +14,14 @@ function App() {
       .then(response => setCountries(response.data))
   }, [])
   const filteredCountries = countries.filter((country) => {
-    return country.name.toLowerCase().startsWith(filter.toLowerCase())
+    return country.name.toLowerCase().includes(filter.toLowerCase())
   })
 
 
   return (
     <div>
       <Filter filter={filter} handleChange={(event) => setFilter(event.target.value)}></Filter>
-      <Countries countries={filteredCountries}></Countries>
+      <Countries countries={filteredCountries} handleShow={(event) => setFilter(event.target.value)}></Countries>
     </div>
   );
 }
