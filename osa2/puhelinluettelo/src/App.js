@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [errorMessage, setErrorMessage] = useState(null)
+  const [errorSeverity, setErrorSeverity] = useState(1)
 
   useEffect(() => {
     personService.getAll()
@@ -45,6 +46,17 @@ const App = () => {
               setErrorMessage(null)
             }, 5000)
           })
+          .catch(error => {
+            setErrorMessage(`Information of ${personObject.name} has already been removed from server`)
+            setErrorSeverity(2)
+            setNewName('')
+            setNewNumber('')
+            setPersons(persons.filter(n => n.id !== id))
+            setTimeout(() => {
+              setErrorMessage(null)
+              setErrorSeverity(1)
+            }, 5000)
+          })
       }
     } else {
       const personObject = {
@@ -61,8 +73,6 @@ const App = () => {
             setErrorMessage(null)
           }, 5000)
         })
-
-
     }
   }
 
@@ -79,13 +89,15 @@ const App = () => {
           }, 5000)
         })
         .catch(error => {
-          alert(
-            `The name ${person.name} was already deleted from the phonebook`
-          )
+          setErrorMessage(`Information of ${person.name} has already been removed from server`)
+          setErrorSeverity(2)
           setPersons(persons.filter(n => n.id !== id))
+          setTimeout(() => {
+            setErrorMessage(null)
+            setErrorSeverity(1)
+          }, 5000)
         })
     }
-
   }
 
   const filteredPersons = persons.filter((person) => {
@@ -95,7 +107,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Error message={errorMessage}></Error>
+      <Error message={errorMessage} severity={errorSeverity}></Error>
       <Filter filter={filter} handleChange={(event) => setFilter(event.target.value)}></Filter>
       <h2>Add new number</h2>
       <PersonForm name={newName} number={newNumber}
