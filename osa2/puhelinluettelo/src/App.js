@@ -39,6 +39,24 @@ const App = () => {
     }
   }
 
+  const deletePerson = (id) => {
+    const person = persons.find(n => n.id === id)
+
+    if (window.confirm(`Delete ${person.name} ?`)) {
+      personService.deleteObject(id)
+        .then(() => {
+          setPersons(persons.filter(n => n.id !== id))
+        })
+        .catch(error => {
+          alert(
+            `The name ${person.name} was already deleted from the phonebook`
+          )
+          setPersons(persons.filter(n => n.id !== id))
+        })
+    }
+
+  }
+
   const filteredPersons = persons.filter((person) => {
     return person.name.toLowerCase().startsWith(filter.toLowerCase())
   })
@@ -53,7 +71,7 @@ const App = () => {
         handleNumberChange={(event) => setNewNumber(event.target.value)}
         handlePersonAdd={addPerson}></PersonForm>
       <h2>Numbers</h2>
-      <Persons persons={filteredPersons}></Persons>
+      <Persons persons={filteredPersons} handleDeleteOf={deletePerson}></Persons>
     </div >
   )
 
