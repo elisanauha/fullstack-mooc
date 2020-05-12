@@ -19,10 +19,27 @@ const App = () => {
     event.preventDefault()
 
     let found = false
-    persons.forEach(person => { if (person.name === newName) found = true })
+    let id = 0
+    persons.forEach(person => {
+      if (person.name === newName) {
+        found = true
+        id = person.id
+      }
+    })
 
     if (found) {
-      window.alert(`${newName} is already added to phonebook`)
+      if (window.confirm(`${newName} is already added to phonebook. Replace old number with new number?`)) {
+        const personObject = {
+          name: newName,
+          number: newNumber,
+        }
+        personService.update(id, personObject)
+          .then(returnedPerson => {
+            setPersons(persons.filter(n => n.id !== id).concat(returnedPerson))
+            setNewName('')
+            setNewNumber('')
+          })
+      }
     } else {
       const personObject = {
         name: newName,
