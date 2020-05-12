@@ -3,12 +3,14 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import personService from './services/persons'
+import Error from './components/Error'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll()
@@ -38,6 +40,10 @@ const App = () => {
             setPersons(persons.filter(n => n.id !== id).concat(returnedPerson))
             setNewName('')
             setNewNumber('')
+            setErrorMessage(`Edited ${returnedPerson.name} `)
+            setTimeout(() => {
+              setErrorMessage(null)
+            }, 5000)
           })
       }
     } else {
@@ -50,6 +56,10 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
           setNewNumber('')
+          setErrorMessage(`Added ${returnedPerson.name} `)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         })
 
 
@@ -63,6 +73,10 @@ const App = () => {
       personService.deleteObject(id)
         .then(() => {
           setPersons(persons.filter(n => n.id !== id))
+          setErrorMessage(`Deleted ${person.name} `)
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
         })
         .catch(error => {
           alert(
@@ -81,6 +95,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Error message={errorMessage}></Error>
       <Filter filter={filter} handleChange={(event) => setFilter(event.target.value)}></Filter>
       <h2>Add new number</h2>
       <PersonForm name={newName} number={newNumber}
