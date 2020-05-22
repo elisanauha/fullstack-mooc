@@ -1,33 +1,33 @@
-import React, { useState, useEffect } from "react";
-import Filter from "./components/Filter";
-import PersonForm from "./components/PersonForm";
-import Persons from "./components/Persons";
-import personService from "./services/persons";
-import Error from "./components/Error";
+import React, { useState, useEffect } from 'react'
+import Filter from './components/Filter'
+import PersonForm from './components/PersonForm'
+import Persons from './components/Persons'
+import personService from './services/persons'
+import Error from './components/Error'
 
 const App = () => {
-  const [persons, setPersons] = useState([]);
-  const [newName, setNewName] = useState("");
-  const [newNumber, setNewNumber] = useState("");
-  const [filter, setFilter] = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [errorSeverity, setErrorSeverity] = useState(1);
+  const [persons, setPersons] = useState([])
+  const [newName, setNewName] = useState('')
+  const [newNumber, setNewNumber] = useState('')
+  const [filter, setFilter] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [errorSeverity, setErrorSeverity] = useState(1)
 
   useEffect(() => {
-    personService.getAll().then((initialPersons) => setPersons(initialPersons));
-  }, []);
+    personService.getAll().then((initialPersons) => setPersons(initialPersons))
+  }, [])
 
   const addPerson = (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
-    let found = false;
-    let id = 0;
+    let found = false
+    let id = 0
     persons.forEach((person) => {
       if (person.name === newName) {
-        found = true;
-        id = person.id;
+        found = true
+        id = person.id
       }
-    });
+    })
 
     if (found) {
       if (
@@ -38,99 +38,99 @@ const App = () => {
         const personObject = {
           name: newName,
           number: newNumber,
-        };
+        }
         personService
           .update(id, personObject)
           .then((returnedPerson) => {
             setPersons(
               persons.filter((n) => n.id !== id).concat(returnedPerson)
-            );
-            setNewName("");
-            setNewNumber("");
-            setErrorMessage(`Edited ${returnedPerson.name} `);
+            )
+            setNewName('')
+            setNewNumber('')
+            setErrorMessage(`Edited ${returnedPerson.name} `)
             setTimeout(() => {
-              setErrorMessage(null);
-            }, 5000);
+              setErrorMessage(null)
+            }, 5000)
           })
-          .catch((error) => {
+          .catch(() => {
             setErrorMessage(
               `Information of ${personObject.name} has already been removed from server`
-            );
-            setErrorSeverity(2);
-            setNewName("");
-            setNewNumber("");
-            setPersons(persons.filter((n) => n.id !== id));
+            )
+            setErrorSeverity(2)
+            setNewName('')
+            setNewNumber('')
+            setPersons(persons.filter((n) => n.id !== id))
             setTimeout(() => {
-              setErrorMessage(null);
-              setErrorSeverity(1);
-            }, 5000);
+              setErrorMessage(null)
+              setErrorSeverity(1)
+            }, 5000)
           })
           .catch((error) => {
-            setErrorSeverity(2);
-            setErrorMessage(error.response.data.error);
+            setErrorSeverity(2)
+            setErrorMessage(error.response.data.error)
             setTimeout(() => {
-              setErrorMessage(null);
-              setErrorSeverity(1);
-            }, 5000);
-          });
+              setErrorMessage(null)
+              setErrorSeverity(1)
+            }, 5000)
+          })
       }
     } else {
       const personObject = {
         name: newName,
         number: newNumber,
-      };
+      }
       personService
         .create(personObject)
         .then((returnedPerson) => {
-          setPersons(persons.concat(returnedPerson));
-          setNewName("");
-          setNewNumber("");
-          setErrorMessage(`Added ${returnedPerson.name} `);
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          setErrorMessage(`Added ${returnedPerson.name} `)
           setTimeout(() => {
-            setErrorMessage(null);
-          }, 5000);
+            setErrorMessage(null)
+          }, 5000)
         })
         .catch((error) => {
-          setErrorSeverity(2);
-          setErrorMessage(error.response.data.error);
+          setErrorSeverity(2)
+          setErrorMessage(error.response.data.error)
           setTimeout(() => {
-            setErrorMessage(null);
-            setErrorSeverity(1);
-          }, 5000);
-        });
+            setErrorMessage(null)
+            setErrorSeverity(1)
+          }, 5000)
+        })
     }
-  };
+  }
 
   const deletePerson = (id) => {
-    const person = persons.find((n) => n.id === id);
+    const person = persons.find((n) => n.id === id)
 
     if (window.confirm(`Delete ${person.name} ?`)) {
       personService
         .deleteObject(id)
         .then(() => {
-          setPersons(persons.filter((n) => n.id !== id));
-          setErrorMessage(`Deleted ${person.name} `);
+          setPersons(persons.filter((n) => n.id !== id))
+          setErrorMessage(`Deleted ${person.name} `)
           setTimeout(() => {
-            setErrorMessage(null);
-          }, 5000);
+            setErrorMessage(null)
+          }, 5000)
         })
         .catch((error) => {
           setErrorMessage(
             `Information of ${person.name} has already been removed from server`
-          );
-          setErrorSeverity(2);
-          setPersons(persons.filter((n) => n.id !== id));
+          )
+          setErrorSeverity(2)
+          setPersons(persons.filter((n) => n.id !== id))
           setTimeout(() => {
-            setErrorMessage(null);
-            setErrorSeverity(1);
-          }, 5000);
-        });
+            setErrorMessage(null)
+            setErrorSeverity(1)
+          }, 5000)
+        })
     }
-  };
+  }
 
   const filteredPersons = persons.filter((person) => {
-    return person.name.toLowerCase().startsWith(filter.toLowerCase());
-  });
+    return person.name.toLowerCase().startsWith(filter.toLowerCase())
+  })
 
   return (
     <div>
@@ -154,7 +154,7 @@ const App = () => {
         handleDeleteOf={deletePerson}
       ></Persons>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App
