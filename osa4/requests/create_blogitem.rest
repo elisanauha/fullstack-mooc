@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+content-type: application/json
+
+{
+  "title": "How to Node",
+  "author": "Blog Writer",
+  "url": "www.example.com",
+  "likes": 10
+}
