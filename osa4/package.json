@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint .",
+    "test": "jest --verbose"
   },
   "author": "Elisa Nauha",
   "license": "MIT",
@@ -20,6 +21,7 @@
   },
   "devDependencies": {
     "eslint": "^7.0.0",
+    "jest": "^26.0.1",
     "nodemon": "^2.0.3"
   }
 }
