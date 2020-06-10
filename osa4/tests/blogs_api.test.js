@@ -28,6 +28,35 @@ test('id field is called id not _id', async () => {
   expect(blogs[0].id).toBeDefined()
 })
 
+test('adding blog adds to the number of blogs', async () => {
+  const newBlog = {
+    title: 'How to Refactor',
+    author: 'Blog Writer',
+    url: 'www.example.com',
+    likes: 10,
+  }
+
+  await api.post('/api/blogs').send(newBlog).expect(201)
+
+  const blogs = await helper.blogsInDb()
+  expect(blogs).toHaveLength(helper.initialBlogs.length + 1)
+})
+
+test('adding blog adds the new blog title', async () => {
+  const newBlog = {
+    title: 'How to Refactor',
+    author: 'Blog Writer',
+    url: 'www.example.com',
+    likes: 10,
+  }
+
+  await api.post('/api/blogs').send(newBlog).expect(201)
+
+  const blogs = await helper.blogsInDb()
+  const titles = blogs.map((n) => n.title)
+  expect(titles).toContain(newBlog.title)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
