@@ -106,6 +106,34 @@ describe('initial blogs saved', () => {
       await api.post('/api/blogs').send(newBlog).expect(400)
     })
   })
+  describe('delete/put', () => {
+    test('deleting blog works', async () => {
+      const blogs = await helper.blogsInDb()
+      const blogToDelete = blogs[0]
+      await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+
+      const blogsAfter = await helper.blogsInDb()
+      expect(blogsAfter).toHaveLength(helper.initialBlogs.length - 1)
+    })
+
+    test('editing blog works', async () => {
+      const blogs = await helper.blogsInDb()
+      const blogToEdit = blogs[0]
+      const blogEdited = {
+        title: blogToEdit.title,
+        author: blogToEdit.author,
+        url: blogToEdit.url,
+        likes: 1492,
+      }
+
+      const result = await api
+        .put(`/api/blogs/${blogToEdit.id}`)
+        .send(blogEdited)
+        .expect(200)
+
+      expect(result.body.likes).toBe(blogEdited.likes)
+    })
+  })
 })
 
 afterAll(() => {

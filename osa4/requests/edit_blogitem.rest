@@ -1,0 +1,9 @@
+PUT http://localhost:3003/api/blogs/5edf7bf35385d760edc3d1a8
+content-type: application/json
+
+{
+  "title": "How to Refactor",
+  "author": "Blog Writer",
+  "url": "www.example.com",
+  "likes": 1492
+}
