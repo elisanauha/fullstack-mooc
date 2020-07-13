@@ -5,5 +5,6 @@ content-type: application/json
   "title": "How to Refactor",
   "author": "Blog Writer",
   "url": "www.example.com",
-  "likes": 10
+  "likes": 10,
+  "userId": "5f0c3917e0674d05768a5700"
 }
