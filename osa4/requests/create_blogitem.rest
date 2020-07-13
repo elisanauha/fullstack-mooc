@@ -2,9 +2,9 @@ POST http://localhost:3003/api/blogs
 content-type: application/json
 
 {
-  "title": "How to Refactor",
+  "title": "How to Refactor2",
   "author": "Blog Writer",
   "url": "www.example.com",
-  "likes": 10,
+  "likes": 100,
   "userId": "5f0c3917e0674d05768a5700"
 }
