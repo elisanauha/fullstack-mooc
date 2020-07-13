@@ -1,10 +1,10 @@
 POST http://localhost:3003/api/blogs
 content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJsb2d3cml0ZXIiLCJpZCI6IjVmMGMzOTE3ZTA2NzRkMDU3NjhhNTcwMCIsImlhdCI6MTU5NDY0MDE1NH0.T-Kn835BPM5qvEih8miwkvwsc9rc7fu7N51e2PAdgcU
 
 {
   "title": "How to Refactor2",
   "author": "Blog Writer",
   "url": "www.example.com",
-  "likes": 100,
-  "userId": "5f0c3917e0674d05768a5700"
+  "likes": 100
 }
