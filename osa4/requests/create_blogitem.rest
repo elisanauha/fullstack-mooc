@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs
 content-type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJsb2d3cml0ZXIiLCJpZCI6IjVmMGMzOTE3ZTA2NzRkMDU3NjhhNTcwMCIsImlhdCI6MTU5NDY0MDE1NH0.T-Kn835BPM5qvEih8miwkvwsc9rc7fu7N51e2PAdgcU
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImJsb2d3cml0ZXIiLCJpZCI6IjVmMGMzOTE3ZTA2NzRkMDU3NjhhNTcwMCIsImlhdCI6MTU5NDY0NDQ0NH0.ih4dJSYR-zA8tMDRcShn3ArSFs3n_bPl5nI8CciwbfM
 
 {
   "title": "How to Refactor2",
