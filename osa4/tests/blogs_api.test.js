@@ -3,11 +3,14 @@ const supertest = require('supertest')
 const helper = require('./test_helper')
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const api = supertest(app)
 
 describe('initial blogs saved', () => {
   beforeEach(async () => {
+    await User.deleteMany({})
+    await helper.createUser()
     await Blog.deleteMany({})
     await Blog.insertMany(helper.initialBlogs)
   })
@@ -39,9 +42,11 @@ describe('initial blogs saved', () => {
         url: 'www.example.com',
         likes: 10,
       }
+      const bearertoken = await helper.getUserToken()
 
       await api
         .post('/api/blogs')
+        .set('Authorization', bearertoken)
         .send(newBlog)
         .expect(200)
         .expect('Content-Type', /application\/json/)
@@ -57,9 +62,11 @@ describe('initial blogs saved', () => {
         url: 'www.example.com',
         likes: 10,
       }
+      const bearertoken = await helper.getUserToken()
 
       await api
         .post('/api/blogs')
+        .set('Authorization', bearertoken)
         .send(newBlog)
         .expect(200)
         .expect('Content-Type', /application\/json/)
@@ -75,8 +82,10 @@ describe('initial blogs saved', () => {
         author: 'Blog Writer',
         url: 'www.nolikes.com',
       }
+      const bearertoken = await helper.getUserToken()
       const result = await api
         .post('/api/blogs')
+        .set('Authorization', bearertoken)
         .send(newBlog)
         .expect(200)
         .expect('Content-Type', /application\/json/)
@@ -85,16 +94,18 @@ describe('initial blogs saved', () => {
       expect(result.body.likes).toBe(0)
     })
 
-    // HTTP/1.1 400 Bad Request given by api but test does not pass?
-    // ValidationError: Blog validation failed: title: Path `title` is required.
-
-    test('adding blog with title gives bad request', async () => {
+    test('adding blog with no title gives bad request', async () => {
       const newBlog = {
         author: 'No Title Writer',
         url: 'www.notitle.com',
         likes: 10,
       }
-      await api.post('/api/blogs').send(newBlog).expect(400)
+      const bearertoken = await helper.getUserToken()
+      await api
+        .post('/api/blogs')
+        .set('Authorization', bearertoken)
+        .send(newBlog)
+        .expect(400)
     })
 
     test('adding blog with url gives bad request', async () => {
@@ -103,14 +114,23 @@ describe('initial blogs saved', () => {
         author: 'No URL Writer',
         likes: 10,
       }
-      await api.post('/api/blogs').send(newBlog).expect(400)
+      const bearertoken = await helper.getUserToken()
+      await api
+        .post('/api/blogs')
+        .set('Authorization', bearertoken)
+        .send(newBlog)
+        .expect(400)
     })
   })
   describe('delete/put', () => {
     test('deleting blog works', async () => {
       const blogs = await helper.blogsInDb()
       const blogToDelete = blogs[0]
-      await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+      const bearertoken = await helper.getUserToken()
+      await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .set('Authorization', bearertoken)
+        .expect(204)
 
       const blogsAfter = await helper.blogsInDb()
       expect(blogsAfter).toHaveLength(helper.initialBlogs.length - 1)
