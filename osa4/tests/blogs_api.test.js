@@ -35,6 +35,20 @@ describe('initial blogs saved', () => {
   })
 
   describe('post', () => {
+    test('adding does not work without a token', async () => {
+      const newBlog = {
+        title: 'How to Refactor',
+        author: 'Blog Writer',
+        url: 'www.example.com',
+        likes: 10,
+      }
+
+      await api.post('/api/blogs').send(newBlog).expect(401)
+
+      const blogs = await helper.blogsInDb()
+      expect(blogs).toHaveLength(helper.initialBlogs.length)
+    })
+
     test('adding blog adds to the number of blogs', async () => {
       const newBlog = {
         title: 'How to Refactor',
@@ -123,17 +137,46 @@ describe('initial blogs saved', () => {
     })
   })
   describe('delete/put', () => {
-    test('deleting blog works', async () => {
+    test('deleting someone elses blog does not work', async () => {
       const blogs = await helper.blogsInDb()
       const blogToDelete = blogs[0]
       const bearertoken = await helper.getUserToken()
       await api
         .delete(`/api/blogs/${blogToDelete.id}`)
         .set('Authorization', bearertoken)
-        .expect(204)
+        .expect(401)
 
       const blogsAfter = await helper.blogsInDb()
-      expect(blogsAfter).toHaveLength(helper.initialBlogs.length - 1)
+      expect(blogsAfter).toHaveLength(helper.initialBlogs.length)
+    })
+
+    test('deleting blog works', async () => {
+      // Add a new blog for user
+      const newBlog = {
+        title: 'How to Refactor',
+        author: 'Blog Writer',
+        url: 'www.example.com',
+        likes: 10,
+      }
+      const bearertoken = await helper.getUserToken()
+
+      const blogresponse = await api
+        .post('/api/blogs')
+        .set('Authorization', bearertoken)
+        .send(newBlog)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      // Then delete that blog
+      const blogIdToDelete = blogresponse.body.id
+
+      await api
+        .delete(`/api/blogs/${blogIdToDelete}`)
+        .set('Authorization', bearertoken)
+        .expect(204)
+      // Number of blogs should not have changed from original
+      const blogsAfter = await helper.blogsInDb()
+      expect(blogsAfter).toHaveLength(helper.initialBlogs.length)
     })
 
     test('editing blog works', async () => {
