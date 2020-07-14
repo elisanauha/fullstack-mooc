@@ -34,8 +34,23 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
-  await Blog.findByIdAndRemove(request.params.id)
-  response.status(204).end()
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  const user = await User.findById(decodedToken.id)
+
+  if (user.blogs.includes(request.params.id.toString())) {
+    // Poistetaan käyttäjältä
+    user.blogs = user.blogs.filter(
+      (blog) => blog.toString() !== request.params.id
+    )
+    await user.save()
+    // Poistetaan itse blogi
+    await Blog.findByIdAndRemove(request.params.id)
+    response.status(204).end()
+  } else {
+    response.status(401).json({
+      error: 'deletion blog not allowed',
+    })
+  }
 })
 
 blogsRouter.put('/:id', async (request, response) => {
