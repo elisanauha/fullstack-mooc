@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Message from './components/Message'
 import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
-import BlogForm from './components/BlogForm'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -14,6 +15,9 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const [message, setMessage] = useState(null)
+  const [messageSeverity, setMessageSeverity] = useState(1)
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs))
@@ -30,7 +34,6 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    console.log('logging in with', username, password)
     try {
       const user = await loginService.login({
         username,
@@ -42,11 +45,17 @@ const App = () => {
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
       console.log(user.token)
       blogService.setToken(user.token)
+      setMessage('user signed in')
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     } catch (exception) {
-      // setErrorMessage('wrong credentials')
-      // setTimeout(() => {
-      //   setErrorMessage(null)
-      // }, 5000)
+      setMessage('wrong username or password')
+      setMessageSeverity(2)
+      setTimeout(() => {
+        setMessage(null)
+        setMessageSeverity(1)
+      }, 5000)
     }
   }
 
@@ -59,7 +68,6 @@ const App = () => {
 
   const handleBlogAdd = async (event) => {
     event.preventDefault()
-    console.log('adding blog', title)
     try {
       const blog = await blogService.create({
         title: title,
@@ -71,11 +79,17 @@ const App = () => {
       setAuthor('')
       setUrl('')
       setBlogs(blogs.concat(blog))
+      setMessage(`a new blog ${blog.title} by ${blog.author} added`)
+      setTimeout(() => {
+        setMessage(null)
+      }, 5000)
     } catch (exception) {
-      // setErrorMessage('wrong credentials')
-      // setTimeout(() => {
-      //   setErrorMessage(null)
-      // }, 5000)
+      setMessage('Blog not added')
+      setMessageSeverity(2)
+      setTimeout(() => {
+        setMessage(null)
+        setMessageSeverity(1)
+      }, 5000)
     }
   }
 
@@ -84,6 +98,7 @@ const App = () => {
       {user ? (
         <div>
           <h2>blogs</h2>
+          <Message message={message} severity={messageSeverity}></Message>
           <p>
             {user.name} logged in <button onClick={handleLogout}>logout</button>
           </p>
@@ -102,13 +117,17 @@ const App = () => {
           ))}
         </div>
       ) : (
-        <LoginForm
-          username={username}
-          setUsername={setUsername}
-          password={password}
-          setPassword={setPassword}
-          handleLogin={handleLogin}
-        ></LoginForm>
+        <div>
+          <h2>log in to application</h2>
+          <Message message={message} severity={messageSeverity}></Message>
+          <LoginForm
+            username={username}
+            setUsername={setUsername}
+            password={password}
+            setPassword={setPassword}
+            handleLogin={handleLogin}
+          ></LoginForm>
+        </div>
       )}
     </div>
   )
