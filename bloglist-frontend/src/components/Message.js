@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 const Message = ({ message, severity }) => {
   let messageClass = 'notification'
@@ -8,6 +9,11 @@ const Message = ({ message, severity }) => {
   }
 
   return <div className={messageClass}>{message}</div>
+}
+
+Message.propTypes = {
+  message: PropTypes.string,
+  severity: PropTypes.number.isRequired,
 }
 
 export default Message
