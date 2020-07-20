@@ -95,6 +95,11 @@ const App = () => {
     setBlogs(blogs.filter((post) => post.id !== blog.id).concat(likedBlog))
   }
 
+  const remove = async (id) => {
+    await blogService.remove(id)
+    setBlogs(blogs.filter((blog) => blog.id !== id))
+  }
+
   return (
     <div>
       {user ? (
@@ -112,7 +117,13 @@ const App = () => {
               return a.likes - b.likes
             })
             .map((blog) => (
-              <Blog key={blog.id} blog={blog} like={like} />
+              <Blog
+                key={blog.id}
+                blog={blog}
+                like={like}
+                remove={remove}
+                usersPost={blog.user.username === user.username}
+              />
             ))}
         </div>
       ) : (

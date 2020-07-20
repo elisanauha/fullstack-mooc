@@ -1,7 +1,13 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, like }) => {
+const Blog = ({ blog, like, remove, usersPost }) => {
   const [showAll, setShowAll] = useState(false)
+
+  const deleteBlog = () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      remove(blog.id)
+    }
+  }
 
   return (
     <div className="blogStyle">
@@ -21,6 +27,7 @@ const Blog = ({ blog, like }) => {
             likes {blog.likes} <button onClick={() => like(blog)}>like</button>
           </p>
           <p>{blog.user.name}</p>
+          {usersPost && <button onClick={deleteBlog}>remove</button>}
         </div>
       )}
     </div>
