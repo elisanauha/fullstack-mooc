@@ -25,13 +25,6 @@ describe('Blog app', function () {
       cy.contains('Terry Tester logged in')
     })
 
-    // it('logout succeeds', function () {
-    //   cy.get('logout').click()
-    //   cy.contains('username')
-    //   cy.contains('password')
-    //   cy.contains('login')
-    // })
-
     it('fails with wrong credentials', function () {
       cy.get('#username').type('ttester')
       cy.get('#password').type('wrongpassword')
