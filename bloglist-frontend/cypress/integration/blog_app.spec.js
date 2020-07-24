@@ -43,7 +43,7 @@ describe('Blog app', function () {
     })
   })
 
-  describe.only('When logged in', function () {
+  describe('When logged in', function () {
     beforeEach(function () {
       cy.login({ username: 'ttester', password: 'password' })
 
@@ -69,7 +69,12 @@ describe('Blog app', function () {
     })
 
     it('A blog can be liked', function () {
-      cy.createBlog()
+      cy.createBlog({
+        title: 'A new blog to add',
+        author: 'New Author',
+        url: 'www.example.com',
+        likes: 0,
+      })
       cy.get('.view-button').click()
       cy.contains('likes 0')
       cy.get('.like-button').click()
@@ -79,7 +84,12 @@ describe('Blog app', function () {
     })
 
     it('A blog can be deleted by user', function () {
-      cy.createBlog()
+      cy.createBlog({
+        title: 'A new blog to add',
+        author: 'New Author',
+        url: 'www.example.com',
+        likes: 0,
+      })
       cy.get('.view-button').click()
       cy.contains('likes 0')
       cy.get('.remove-button').click()
@@ -87,7 +97,12 @@ describe('Blog app', function () {
     })
 
     it('A blog can not be deleted by other user', function () {
-      cy.createBlog()
+      cy.createBlog({
+        title: 'A new blog to add',
+        author: 'New Author',
+        url: 'www.example.com',
+        likes: 0,
+      })
       cy.get('.view-button').click()
       cy.get('.blogStyle').should('contain', 'remove')
 
@@ -96,6 +111,45 @@ describe('Blog app', function () {
 
       cy.get('.blogStyle').should('not.contain', 'remove')
       cy.get('html').contains('A new blog to add New Author')
+    })
+
+    it.only('blogs ordered according to likes', function () {
+      // Create blogs with different number of likes and check one with most likes is first.
+      cy.createBlog({
+        title: 'A new blog to add',
+        author: 'New Author',
+        url: 'www.example.com',
+        likes: 0,
+      })
+      cy.get('.view-button').click({ multiple: true })
+      cy.get('.blogStyle').first().contains('likes 0')
+      cy.createBlog({
+        title: 'A second blog to add',
+        author: 'Second Author',
+        url: 'www.example.com',
+        likes: 5,
+      })
+      cy.get('.view-button').click({ multiple: true })
+      cy.get('.blogStyle').first().contains('likes 5')
+      cy.get('.blogStyle').last().contains('likes 0')
+      cy.createBlog({
+        title: 'A third blog to add',
+        author: 'Third Author',
+        url: 'www.example.com',
+        likes: 2,
+      })
+      cy.get('.view-button').click({ multiple: true })
+      cy.get('.blogStyle').first().contains('likes 5')
+      cy.get('.blogStyle').last().contains('likes 0')
+      cy.createBlog({
+        title: 'A fourth blog to add',
+        author: 'Fourth Author',
+        url: 'www.example.com',
+        likes: 8,
+      })
+      cy.get('.view-button').click({ multiple: true })
+      cy.get('.blogStyle').first().contains('likes 8')
+      cy.get('.blogStyle').last().contains('likes 0')
     })
   })
 })
