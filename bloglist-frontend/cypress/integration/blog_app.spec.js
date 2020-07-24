@@ -113,7 +113,7 @@ describe('Blog app', function () {
       cy.get('html').contains('A new blog to add New Author')
     })
 
-    it.only('blogs ordered according to likes', function () {
+    it('blogs ordered according to likes', function () {
       // Create blogs with different number of likes and check one with most likes is first.
       cy.createBlog({
         title: 'A new blog to add',
