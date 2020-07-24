@@ -33,7 +33,11 @@ const Blog = ({ blog, like, remove, usersPost }) => {
             </button>
           </p>
           <p>{blog.user.name}</p>
-          {usersPost && <button onClick={deleteBlog}>remove</button>}
+          {usersPost && (
+            <button className="remove-button" onClick={deleteBlog}>
+              remove
+            </button>
+          )}
         </div>
       )}
     </div>
