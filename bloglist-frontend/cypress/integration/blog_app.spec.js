@@ -59,5 +59,15 @@ describe('Blog app', function () {
         .and('have.css', 'color', 'rgb(0, 128, 0)')
       cy.get('.blogStyle').contains('A new blog to add New Author')
     })
+
+    it('A blog can be liked', function () {
+      cy.createBlog()
+      cy.get('.view-button').click()
+      cy.contains('likes 0')
+      cy.get('.like-button').click()
+      cy.contains('likes 1')
+      cy.get('.like-button').click()
+      cy.contains('likes 2')
+    })
   })
 })

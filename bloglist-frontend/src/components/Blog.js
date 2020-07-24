@@ -15,7 +15,9 @@ const Blog = ({ blog, like, remove, usersPost }) => {
       {!showAll ? (
         <div>
           {blog.title} {blog.author}{' '}
-          <button onClick={() => setShowAll(true)}>view</button>
+          <button className="view-button" onClick={() => setShowAll(true)}>
+            view
+          </button>
         </div>
       ) : (
         <div>
@@ -25,7 +27,10 @@ const Blog = ({ blog, like, remove, usersPost }) => {
           </p>
           <p>{blog.url}</p>
           <p>
-            likes {blog.likes} <button onClick={() => like(blog)}>like</button>
+            likes {blog.likes}{' '}
+            <button className="like-button" onClick={() => like(blog)}>
+              like
+            </button>
           </p>
           <p>{blog.user.name}</p>
           {usersPost && <button onClick={deleteBlog}>remove</button>}

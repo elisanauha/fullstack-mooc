@@ -32,3 +32,11 @@ Cypress.Commands.add('login', ({ username, password }) => {
     cy.visit('http://localhost:3000')
   })
 })
+
+Cypress.Commands.add('createBlog', () => {
+  cy.get('#new-blog').click()
+  cy.get('#title').type('A new blog to add')
+  cy.get('#author').type('New Author')
+  cy.get('#url').type('www.example.com')
+  cy.get('#create-button').click()
+})
